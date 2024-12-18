@@ -211,3 +211,51 @@ function custom_form_shortcode() {
     return ob_get_clean();
 }
 add_shortcode('custom_form', 'custom_form_shortcode');
+
+// правила для form-action.php
+function custom_form_rewrite_rule() {
+    add_rewrite_rule(
+        'custom-form-action/?$', // URL-шаблон
+        'index.php?custom_form_action=1', // Правило перезаписи
+        'top'
+    );
+}
+add_action('init', 'custom_form_rewrite_rule');
+
+function custom_form_query_vars($vars) {
+    $vars[] = 'custom_form_action';
+    return $vars;
+}
+add_filter('query_vars', 'custom_form_query_vars');
+
+function custom_form_template_redirect() {
+    if (get_query_var('custom_form_action')) {
+        include get_template_directory() . '/form-action.php';
+        exit;
+    }
+}
+add_action('template_redirect', 'custom_form_template_redirect');
+
+//правила для is-date-booked
+function custom_date_check_rewrite_rule() {
+    add_rewrite_rule(
+        'is-date-booked/?$', // URL-шаблон
+        'index.php?is_date_booked=1', // Правило перезаписи
+        'top'
+    );
+}
+add_action('init', 'custom_date_check_rewrite_rule');
+
+function custom_date_check_query_vars($vars) {
+    $vars[] = 'is_date_booked';
+    return $vars;
+}
+add_filter('query_vars', 'custom_date_check_query_vars');
+
+function custom_date_check_template_redirect() {
+    if (get_query_var('is_date_booked')) {
+        include get_template_directory() . '/is-date-booked.php';
+        exit;
+    }
+}
+add_action('template_redirect', 'custom_date_check_template_redirect');
